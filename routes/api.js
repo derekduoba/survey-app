@@ -4,34 +4,13 @@
 
 Sequelize = require('sequelize');
 
-module.exports = function(app, db) {
+module.exports = function(app, dbController) {
 
-    /*
-    var fs = app.fs;
-
-    app.get('/comments.json', function(req, res) {
-        fs.readFile('./public/comments.json', function(err, data) {
-            res.setHeader('Cache-Control', 'no-cache');
-            res.json(JSON.parse(data));
-      });
-    });
-
-    app.post('/comments.json', function(req, res) {
-        fs.readFile('./public/comments.json', function(err, data) {
-            var comments = JSON.parse(data);
-            comments.push(req.body);
-            fs.writeFile('./public/comments.json', JSON.stringify(comments, null, 4), function(err) {
-                res.setHeader('Cache-Control', 'no-cache');
-                res.json(comments);
-            });
-        });
-    });
-    */
   /**
    * Get a survey question (or all questions)
    * TODO: This API could be extended to allow for batches of answers to 
    * be returned (e.g. 100 at a time)
-   * @param {Number} [id] - A question ID (e.g. 123); will return all questions if an
+   * @param {Number} [qid] - A question ID (e.g. 123); will return all questions if an
    *  id is not provided and "random" is not set
    * @param {Array.<Number>} [random] - Will retreive a random question that 
    *  hasn't already been seen. The input array should contain a list of previously 
@@ -45,56 +24,74 @@ module.exports = function(app, db) {
    *    @param {Number} votes - Number of votes
    **/
   app.get('/question', function(req, res) {
-    console.log("get");
-    console.log(req.query);
-    var data = req.query;
-    if (typeof data.id !== 'undefined' && !isNaN(data.id)) {
-      db.question.find({ where: { id: data.id }, include: ['answer'] }).then(function(q) {
-        console.log(q);
-      }).catch(function(error) {
-        console.log("Error" + error);
-      });
+    try {
+      req.check('qid', '"qid" is not a Number').optional().isInt();
+      req.check('random', '"random" is undefined or is not an Array of Numbers').optional().isArray().randomContainsNumbers();
+      var data = req.query;
+
+    } catch(error) {
+      console.log("VALIDATION CODE ERROR");
+      console.log(error);
     }
+    var errors = req.validationErrors();
+    if (errors) {
+      console.log("INPUT DATA ERROR");
+      console.log(errors);
+      res.send(400);
+      return;
+    } else {
+      console.log("VALIDATION PASS");
+    }
+    dbController.getQuestion(data, function(questions, error) {
+      if (error) {
+        res.status(400).json(questions);
+      } else {
+        res.status(201).json(questions);
+      }
+    });
   });
- 
+
 
   /**
    * Create a survey question
-   * @TODO: Authorized users only
+   * TODO: Authorized users only
    * @param {Object} info - JSON containing question information
    *  @param {String} question - The question
    *  @param {Array.<String>} answers - The answers
    * @return {Object} - Question Info
-   *  @param {Number} id - Question ID; Will be blank on failure
-   *  @param {Number} status - An HTTP status code (200 means you won)
+   *  @param {Number} id - Question ID; Will be blank on failure (check the HTTP status code)
    **/
   app.put('/question', function(req, res) {
-    console.log("put");
-    
-    var testQuestion  = {
-      text: 'How are you?',
-      answers: ['Bad', 'Ok', 'Good']
+    try {
+      req.sanitize('question').trim();
+      req.sanitize('answers').trimAnswers();
+      req.assert('question', '"question" is undefined').isNotUndefined();
+      req.assert('question', 'Question must exist').optional().notEmpty();
+      req.assert('answers', '"answers" is undefined').isNotUndefined();
+      req.assert('answers', 'Answers must be specified').optional().answersAreNotEmpty();
+      var data = req.body;
+    } catch(error) {
+      console.log("VALIDATION CODE ERROR");
+      console.log(error);
     }
-   
-    Sequelize.Promise.resolve({}).then(function(context) {
-      return db.questions.create({text: testQuestion.text}).then(function(question) {
-        context.question = question;
-        return context;
-      }).then(function(context) {
-        context.answers = Sequelize.Promise.map(testQuestion.answers, function(a) {
-          db.answers.create({text: a}).then(function(answer) {
-            return context.question.addAnswer(answer);
-          });
-        });
-        return context;
-      }).then(function(context) {
-        console.log(context);
-      }).catch(function(error) {
-        console.log("ERROR: " + error);
-      });
+    var errors = req.validationErrors();
+    if (errors) {
+      console.log("INPUT DATA ERROR");
+      console.log(errors);
+      res.status(400).json({});
+      return;
+    } else {
+      console.log("VALIDATION PASS");
+    }
+    dbController.createQuestion(data, function(questionResponse) {
+      if (typeof questionResponse.id === 'undefined') {
+        res.status(400).json(questionResponse);
+      } else {
+        res.status(201).json(questionResponse);
+      }
     });
-
   });
+
 
   /**
    * Delete a survey question. A user must have a valid admin ID to delete a question.
@@ -103,7 +100,31 @@ module.exports = function(app, db) {
    * @return {Number} - An HTTP status code (200 means you deleted that sucker)
    **/
   app.delete('/question', function(req, res) {
-    console.log("delete");
+    try {
+      req.checkBody('qid', '"qid" is undefined or not a Number').isNotUndefined().isInt();
+      var data = req.body;
+
+    } catch(error) {
+      console.log("VALIDATION CODE ERROR");
+      console.log(error);
+    }
+    var errors = req.validationErrors();
+    if (errors) {
+      console.log("INPUT DATA ERROR");
+      console.log(errors);
+      res.send(400);
+      return;
+    } else {
+      console.log("VALIDATION PASS");
+    }
+    dbController.deleteQuestion(data.qid, function(res) {
+      if (res) {
+        res.sendStatus(204);
+      } else {
+        res.status(400).send({status: 'failure'});
+      }     
+    });
+
   });
 
   /**
@@ -112,10 +133,34 @@ module.exports = function(app, db) {
    * cookie, IP, rate-limiting?
    * the same survey question multiple times
    * @param {Number} qid - A question ID (e.g. 123)
-   * @param {String} aid - An answer ID
+   * @param {Number} aid - An answer ID (e.g. 3)
    **/
   app.post('/question', function(req, res) {
-    console.log("post");
+    try {
+      req.checkBody('aid', '"aid" is undefined or not a Number').isNotUndefined().isInt();
+      req.checkBody('qid', '"qid" is undefined or not a Number').isNotUndefined().isInt();
+      var data = req.body;
+
+    } catch(error) {
+      console.log("VALIDATION CODE ERROR");
+      console.log(error);
+    }
+    var errors = req.validationErrors();
+    if (errors) {
+      console.log("INPUT DATA ERROR");
+      console.log(errors);
+      res.status(400).send({status: 'failure'});
+      return;
+    } else {
+      console.log("VALIDATION PASS");
+    }
+    dbController.updateVotes(data.qid, data.aid, function(success) {
+      if (success) {
+        res.sendStatus(204);
+      } else {
+        res.status(400).send({status: 'failure'});
+      }
+    });
   });
 
 };

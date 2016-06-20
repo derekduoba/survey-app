@@ -24,7 +24,7 @@ module.exports = function(sequelize) {
       autoIncrement: true,
       primaryKey: true
     },
-    text:Sequelize.STRING
+    question:Sequelize.STRING
   });
 
   // Answer table
@@ -34,16 +34,22 @@ module.exports = function(sequelize) {
       autoIncrement: true,
       primaryKey: true
     },
-    text:Sequelize.STRING,
-    response_count: Sequelize.INTEGER
+    answer:Sequelize.STRING,
+    responses: { 
+      type: Sequelize.INTEGER,
+      defaultValue: 0
+    }
   });
 
   // question_id becomes a foreign key on answer
-  questions.hasMany(answers, {foreignKey: 'question_id', as: 'Answer'});
-  answers.belongsTo(questions, {foreignKey: 'question_id'});
-
-  sequelize.sync({force: true}).then(function() {
-    console.log('Everything is amazing!');
+  questions.hasMany(answers, {
+    foreignKey: 'question_id', 
+  });
+  
+  //NOTE: TURN OFF TABLE DROPPING
+  //sequelize.sync({force: true}).then(function() {
+  sequelize.sync().then(function() {
+    console.log('DB Model Initialized');
   }).catch(function(error) {
     console.log('Error during table creation.');
     console.log(error);
