@@ -1,6 +1,7 @@
 $font-stack: 'Roboto', 'Helvetica', sans-serif;
 $background-color-1:#1D1D26;
 $background-color-2:#2A4F66;
+$background-color-3:#223F52;
 $primary-color:#FFFFFF;
 $secondary-color:#5BC3EB;
 $tertiary-color:#FC6A4E;
@@ -132,7 +133,8 @@ h2 {
         }
       }
       .answer {
-        border-bottom:1px solid $primary-color;
+        background:$background-color-3;
+        padding: 1vw;
         display:table;
         margin-bottom:1.5vh;
         width:100%;         

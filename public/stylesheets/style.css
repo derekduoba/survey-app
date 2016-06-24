@@ -164,7 +164,8 @@ h2 {
 }
 
 .container-fluid .questions-list .question-container .answer {
-  border-bottom: 1px solid #FFFFFF;
+  background: #223F52;
+  padding: 1vw;
   display: table;
   margin-bottom: 1.5vh;
   width: 100%;
