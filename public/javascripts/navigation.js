@@ -22,8 +22,8 @@ $(document).ready(function() {
 
   /** Submit Answer **/
   $(document).on('click', '.answer-button', function() {
-    var aid = $(this).data('answer-id');
-    var qid = $(this).data('question-id'); 
+    var aid = $('input[name=answer]:checked').data('answer-id');
+    var qid = $('input[name=answer]:checked').data('question-id'); 
     answerData = {
       qid: qid,
       aid: aid
@@ -31,7 +31,7 @@ $(document).ready(function() {
     
     // Only allow submission if question hasn't been answered
     var answeredQuestions = getQuestionCookie();
-    if (!answeredQuestions.includes(answerData.qid)) {
+    if (!answeredQuestions.includes(qid) && typeof aid !== 'undefined') {
       submitAnswer(answerData);
     }
   });
@@ -45,7 +45,7 @@ $(document).ready(function() {
    * Add an answer field to the question creation form
    */
   var addAnswer = function(container, answer='Add an answer here...') {
-    var textBox = '<input type="text" class="answer-field form-control" name="answer[]" placeholder="' + answer + '">';
+    var textBox = '<input type="text" class="answer-field form-control input-lg" name="answer[]" placeholder="' + answer + '">';
     $(container).append(textBox);
   }
 
@@ -114,7 +114,7 @@ $(document).ready(function() {
       var answerHTML = function(answers, questionID) {
         var html = '';
         answers.forEach(function(element) {
-          html += '<div class="answer"><input type="radio" class="answer-button" name="answer" value="' + element.id + '" data-answer-id="' + element.id + '" data-question-id="' + questionID + '"><span class="answer-text">' + element.answer  + '</span></div>';
+          html += '<div class="answer"><input type="radio" class="answer-selection" name="answer" value="' + element.id + '" data-answer-id="' + element.id + '" data-question-id="' + questionID + '"><span class="answer-text">' + element.answer  + '</span></div>';
         });
         return html;
       };
@@ -152,21 +152,21 @@ $(document).ready(function() {
    */
   var renderQuestionList = function(questionList) {
     if (jQuery.isEmptyObject(questionList)) {
-      $('.questions').html('<h2>There aren\'t any questions!</h2>');
+      $('.questions-list').html('<h2>There aren\'t any questions!</h2>');
     } else {
       var questionHTML = function(id, question) {
-        return '<div class="question"><h2 data-id="' + id + '">' + id + '.) ' + question + '</h2></div>';
+        return '<div class="question"><h2 data-id="' + id + '">' + id + '. ' + question + '</h2></div>';
       };
       var answerHTML = function(answers, questionID) {
         var html = '';
         answers.forEach(function(element) {
-          html += '<div class="answer"><span class="answer-text" data-answer-id="' + element.id + '" data-question-id="' + questionID + '" >&#8226; ' + element.answer  + '</span><span class="votes">' + element.responses + '</span></div>'; 
+          html += '<div class="answer"><span class="answer-text" data-answer-id="' + element.id + '" data-question-id="' + questionID + '">' + element.answer  + '</span><span class="votes">' + element.responses + '</span></div>'; 
         });
         return html;
       };
       questionList.forEach(function(questionData) {
         var questionElement = '<div class="question-container">' + questionHTML(questionData.id, questionData.question) + answerHTML(questionData.answers, questionData.id) + '</div>';
-        $('.questions').append(questionElement);
+        $('.questions-list').append(questionElement);
       });
     }
   };

@@ -1,11 +1,10 @@
-* {
+*:not(.answer-selection) {
   border-radius: 0 !important;
 }
 
 body {
   background-color: #1D1D26;
   color: #FFFFFF;
-  padding: 1em;
   font-family: "Roboto", "Helvetica", sans-serif;
   font-size: 16px;
   font-weight: 100;
@@ -21,6 +20,7 @@ a {
 
 h1, h2 {
   font-weight: 100;
+  margin: 0;
 }
 
 h1 {
@@ -40,36 +40,88 @@ h2 {
 }
 
 .header {
-  height: 5vh;
-}
-
-.container-fluid {
-  min-height: 100%;
-  max-width: 800px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  background: #FFFFFF;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 0;
+  -ms-flex: none;
+  flex: none;
+  height: 7.5vh;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  min-height: 50px;
+  text-align: center;
+  width: 100vw;
 }
 
-.container-fluid .qa {
-  margin: auto;
+@media screen and (max-width: 960px) {
+  .header .header {
+    height: 10vh;
+  }
+}
+
+.container-fluid {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container-fluid .qa, .container-fluid .create-wrapper, .container-fluid .questions-list {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  margin: 5vh auto;
+  max-width: 800px;
+  min-height: -webkit-min-content;
+  min-height: -moz-min-content;
+  min-height: min-content;
+  overflow: auto;
+  flex-align: center;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+  box-align: center;
+}
+
+.container-fluid .create-wrapper {
   width: 100%;
 }
 
+.container-fluid .create-wrapper .form-group {
+  width: inherit;
+}
+
 .container-fluid .question {
-  margin: 0 0 7.5vh 0;
+  margin: 0 0 5vh 0;
 }
 
 .container-fluid .answer {
   display: table;
-  margin-bottom: 5vh;
+  margin-top: 5vh;
   vertical-align: middle;
 }
 
-.container-fluid .answer .answer-button {
+.container-fluid .answer .answer-selection {
   background: #1D1D26;
   float: left;
   text-transform: uppercase;
@@ -78,13 +130,13 @@ h2 {
   appearance: none;
   width: 3em;
   height: 3em;
-  border: 5px solid #5BC3EB;
+  border: 8px solid #5BC3EB;
   border-radius: 50%;
   box-shadow: inset 0 0 3em rgba(0, 0, 0, 0.2);
   vertical-align: middle;
 }
 
-.container-fluid .answer .answer-button:checked {
+.container-fluid .answer .answer-selection:checked {
   background: #FFFFFF;
 }
 
@@ -92,29 +144,33 @@ h2 {
   color: #5BC3EB;
   display: table-cell;
   font-size: 1.5em;
-  padding-left: 1em;
+  padding-left: 5vw;
   vertical-align: middle;
 }
 
-.container-fluid .questions.list .question-container {
+.container-fluid .questions-list .question-container {
+  background: #2A4F66;
   margin-bottom: 5vh;
+  padding: 2.5vh;
+  width: 100%;
 }
 
-.container-fluid .questions.list .question-container .question {
+.container-fluid .questions-list .question-container .question {
   margin-bottom: 4vh;
 }
 
-.container-fluid .questions.list .question-container .question h2 {
+.container-fluid .questions-list .question-container .question h2 {
   font-size: 1.5em;
 }
 
-.container-fluid .questions.list .question-container .answer {
+.container-fluid .questions-list .question-container .answer {
+  border-bottom: 1px solid #FFFFFF;
   display: table;
   margin-bottom: 1.5vh;
   width: 100%;
 }
 
-.container-fluid .questions.list .question-container .answer .answer-text {
+.container-fluid .questions-list .question-container .answer .answer-text {
   color: #5BC3EB;
   display: table-cell;
   font-size: 1.5em;
@@ -122,46 +178,85 @@ h2 {
   vertical-align: middle;
 }
 
-.container-fluid .questions.list .question-container .answer .votes {
+.container-fluid .questions-list .question-container .answer .votes {
   font-size: 1.5em;
   color: #FFFFFF;
   font-weight: 100;
   float: right;
 }
 
-.container-fluid .form-group .question {
-  margin-bottom: 4vh;
+.container-fluid .form-group {
+  margin: 0;
 }
 
-.container-fluid .form-group .answer-field {
-  margin-bottom: 4vh;
+.container-fluid .form-group .question-field, .container-fluid .form-group .answer-field, .container-fluid .form-group .add-answer {
+  margin-bottom: 3vh;
 }
 
 .container-fluid .form-group .form-control {
   background-color: #2A4F66;
+  border: none;
   color: #FFFFFF;
+}
+
+.container-fluid .form-group .form-control:focus {
+  box-shadow: none;
 }
 
 .add-answer {
   background-color: #2A4F66;
+  font-weight: 100;
 }
 
 .add-answer:hover {
   color: #5BC3EB;
 }
 
-.create-question-container, .create-question {
+.bottom-button-fill {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 0;
+  -ms-flex: none;
+  flex: none;
+  height: 7.5vh;
+  min-height: 50px;
+}
+
+.bottom-button-container, .bottom-button {
   bottom: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 0;
+  -ms-flex: none;
+  flex: none;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
   left: 0;
   position: fixed;
 }
 
-.create-question-container .create-question, .create-question .create-question {
+.bottom-button-container .bottom-button, .bottom-button .bottom-button {
   background-color: #5BC3EB;
   color: #2A4F66;
+  font-family: "Roboto", "Helvetica", sans-serif !important;
+  font-size: 1.5em;
+  font-weight: 100;
   height: 7.5vh;
+  min-height: 50px;
 }
 
-.create-question-container .create-question:hover, .create-question .create-question:hover {
+.bottom-button-container .bottom-button:hover, .bottom-button .bottom-button:hover {
   background-color: #FFFFFF;
+}
+
+@media screen and (orientation: landscape) and (max-width: 960px) {
+  .bottom-button-container .bottom-button-fill, .bottom-button .bottom-button-fill {
+    height: 10vh;
+  }
+  .bottom-button-container .bottom-button, .bottom-button .bottom-button {
+    height: 10vh;
+  }
 }

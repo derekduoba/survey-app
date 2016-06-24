@@ -1,15 +1,16 @@
 extends layout
 
 block internals
-  div.qa
+  div.create-wrapper
     div.question.form-group
-      textarea(type="text", name="question", placeholder="Enter a question here...", class="question-field form-control", rows="3")
+      textarea(type="text", name="question", placeholder="Enter a question here...", class="question-field form-control input-lg", rows="3")
     br
     div.answers.form-group
-      input(type="text", name="answer[]", placeholder="Add an answer here...", class="answer-field form-control")  
+      input(type="text", name="answer[]", placeholder="Add an answer here...", class="answer-field form-control input-lg")  
     br
-    button(type="text", name="addAnswer", class="add-answer btn btn-secondary btn-block") Add Answer
-  
-  div.create-question-container
-    button(class="create-question btn btn-primary btn-block btn-lg") Create Question
+    button(type="text", name="addAnswer", class="add-answer btn btn-secondary btn-block btn-lg") Add Another Answer
+ 
+  div.bottom-button-fill
+  div.bottom-button-container
+    button(class="create-question bottom-button btn btn-primary btn-block btn-lg") Create Question
 
