@@ -4,10 +4,10 @@ $(document).ready(function() {
 
   /** Add answer **/
   $('.add-answer').click(function() {
-    console.log('add answer');
     addAnswer($('.answers'));
   });
 
+  //TODO: create a remove-answer function too
 
   /** Submit question **/
   $('.create-question').click(function() {
@@ -28,7 +28,7 @@ $(document).ready(function() {
       qid: qid,
       aid: aid
     };
-    
+
     // Only allow submission if question hasn't been answered
     var answeredQuestions = getQuestionCookie();
     if (!answeredQuestions.includes(qid) && typeof aid !== 'undefined') {
@@ -68,6 +68,11 @@ $(document).ready(function() {
     }).done(function(res, status) {
       $('.create-question').html('Question Created!');
       $('.create-question').data('question-created', true);
+
+      // Refresh the page for now; reload the question form in the future
+      setTimeout(function() {
+        window.location.reload();
+      }, 1000);
     }).fail(function(error) {
       console.log("ERROR" + error);
     });

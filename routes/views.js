@@ -43,4 +43,8 @@ module.exports = function(app) {
     res.render('create-question', { title: 'Create Question' });  
   });
 
+  app.get('*', function(req, res){
+    res.render('404', { title: 'Survey Time' });
+  });
+
 }

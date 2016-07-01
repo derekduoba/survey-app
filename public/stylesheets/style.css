@@ -33,7 +33,7 @@ h2 {
   font-size: 2.5em;
 }
 
-@media screen and (max-width: 600px) {
+@media only screen and (max-width: 600px) {
   h2 {
     font-size: 1.5em;
   }
@@ -59,8 +59,14 @@ h2 {
   width: 100vw;
 }
 
-@media screen and (max-width: 960px) {
-  .header .header {
+@media only screen and (orientation: landscape) and (max-width: 600px) {
+  .header {
+    height: 10vh;
+  }
+}
+
+@media only screen and (orientation: landscape) and (min-width: 601px) and (max-width: 959px) {
+  .header {
     height: 10vh;
   }
 }
@@ -148,6 +154,10 @@ h2 {
   vertical-align: middle;
 }
 
+.container-fluid .questions-list {
+  width: 100%;
+}
+
 .container-fluid .questions-list .question-container {
   background: #2A4F66;
   margin-bottom: 5vh;
@@ -224,6 +234,18 @@ h2 {
   min-height: 50px;
 }
 
+@media only screen and (orientation: landscape) and (max-width: 600px) {
+  .bottom-button-fill {
+    height: 10vh;
+  }
+}
+
+@media only screen and (orientation: landscape) and (min-width: 601px) and (max-width: 959px) {
+  .bottom-button-fill {
+    height: 10vh;
+  }
+}
+
 .bottom-button-container, .bottom-button {
   bottom: 0;
   display: -webkit-box;
@@ -249,15 +271,18 @@ h2 {
   min-height: 50px;
 }
 
-.bottom-button-container .bottom-button:hover, .bottom-button .bottom-button:hover {
-  background-color: #FFFFFF;
-}
-
-@media screen and (orientation: landscape) and (max-width: 960px) {
-  .bottom-button-container .bottom-button-fill, .bottom-button .bottom-button-fill {
-    height: 10vh;
-  }
+@media only screen and (orientation: landscape) and (max-width: 600px) {
   .bottom-button-container .bottom-button, .bottom-button .bottom-button {
     height: 10vh;
   }
+}
+
+@media only screen and (orientation: landscape) and (min-width: 601px) and (max-width: 959px) {
+  .bottom-button-container .bottom-button, .bottom-button .bottom-button {
+    height: 10vh;
+  }
+}
+
+.bottom-button-container .bottom-button:hover, .bottom-button .bottom-button:hover {
+  background-color: #FFFFFF;
 }

@@ -24,6 +24,10 @@ module.exports = function(sequelize) {
       autoIncrement: true,
       primaryKey: true
     },
+    total_responses: {
+      type: Sequelize.INTEGER,
+      defaultValue:0
+    },
     question:Sequelize.STRING
   });
 
@@ -46,7 +50,7 @@ module.exports = function(sequelize) {
     foreignKey: 'question_id', 
   });
   
-  //NOTE: TURN OFF TABLE DROPPING
+  //NOTE: UNCOMMENT TO ALLOW AUTO TABLE DROPPING
   //sequelize.sync({force: true}).then(function() {
   sequelize.sync().then(function() {
     console.log('DB Model Initialized');

@@ -1,3 +1,5 @@
+@import 'mixins';
+
 $font-stack: 'Roboto', 'Helvetica', sans-serif;
 $background-color-1:#1D1D26;
 $background-color-2:#2A4F66;
@@ -5,9 +7,6 @@ $background-color-3:#223F52;
 $primary-color:#FFFFFF;
 $secondary-color:#5BC3EB;
 $tertiary-color:#FC6A4E;
-
-$break-small:600px;
-$break-large:960px;
 
 *:not(.answer-selection) {
   border-radius: 0 !important;
@@ -37,11 +36,7 @@ h1 {
 h2 {
   color:$primary-color;
   font-size:2.5em;
-}
-@media screen and (max-width: $break-small) {
-  h2 {
-    font-size:1.5em;
-  }
+  @include respond-to(handhelds) { font-size:1.5em; }
 }
 .header {
   align-items:center;
@@ -49,16 +44,12 @@ h2 {
   display:flex;
   flex:none;
   height:7.5vh;
+  @include respond-to(handhelds-landscape) { height:10vh; };
+  @include respond-to(medium-screens-landscape) { height:10vh; };
   justify-content:center;
   min-height:50px;
   text-align:center;
   width:100vw;
-
-  @media screen and (max-width: $break-large) {
-    .header {
-      height:10vh;
-    }
-  }
 }
 .container-fluid {
   display:flex;
@@ -76,7 +67,7 @@ h2 {
     overflow: auto;
     flex-align: center;
     align-items: flex-start;
-    box-align: center;
+    box-align: center;;
   }
   .create-wrapper {
     width:100%;
@@ -119,6 +110,8 @@ h2 {
     }
   }
   .questions-list {
+    width:100%;
+
     .question-container {
       background:$background-color-2; 
       margin-bottom:5vh;
@@ -184,6 +177,8 @@ h2 {
   display:flex;
   flex:none;
   height:7.5vh;
+  @include respond-to(handhelds-landscape) { height:10vh; };
+  @include respond-to(medium-screens-landscape) { height:10vh; };
   min-height:50px;
 }
 .bottom-button-container, .bottom-button {
@@ -201,20 +196,12 @@ h2 {
     font-size:1.5em;
     font-weight:100;
     height:7.5vh;
+    @include respond-to(handhelds-landscape) { height:10vh; };
+    @include respond-to(medium-screens-landscape) { height:10vh; };
     min-height:50px;
 
     &:hover {
       background-color:$primary-color;
     }
   }
-  
-  @media screen and (orientation: landscape) and (max-width: $break-large) {
-    .bottom-button-fill {
-      height:10vh;
-    }
-    .bottom-button {
-      height:10vh;
-    }
-  }
-
 }
