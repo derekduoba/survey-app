@@ -127,23 +127,43 @@ h2 {
       }
       .answer {
         background:$background-color-3;
-        padding: 1vw;
-        display:table;
+        padding:0;
         margin-bottom:1.5vh;
+        position:relative;
         width:100%;         
+
+        progress {
+          background:$background-color-1;
+          height:100%;
+          position:absolute;
+          width:100%;
+          transition: width 300ms cubic-bezier(0.550, 0.085, 0.680, 0.530); /* easeInQuad */
+        }
+
+        progress::-webkit-progress-bar {
+          background:$background-color-3;
+        }
+
+        progress::-webkit-progress-value {
+          background:$background-color-1;
+        }
 
         .answer-text {
           color:$secondary-color;
-          display:table-cell;
           font-size:1.5em;
-          padding-left:0;
+          padding:.5em;
+          @include respond-to(handhelds) { padding:.25em; };
+          @include respond-to(handhelds-landscape) { padding:.25em; };
+          position:relative;
           vertical-align:middle;
         }
         .votes {
           font-size:1.5em;
-          color:$primary-color;
+          color:$secondary-color;
           font-weight:100;
           float:right;
+          padding:1vw;
+          position:relative;
         }
       }
     }

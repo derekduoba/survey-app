@@ -6,7 +6,7 @@ $break-large:960px;
     @media only screen and (max-width: $break-small) { @content; }
   }
   @else if $media == handhelds-landscape {
-    @media only screen and (orientation: landscape) and (max-width: $break-small) { @content; }
+    @media only screen and (orientation: landscape) and (max-width: ($break-small + 100)) { @content; }
   }
   @else if $media == medium-screens {
     @media only screen and (min-width: $break-small + 1) and (max-width: $break-large - 1) { @content; }

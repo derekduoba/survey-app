@@ -159,18 +159,26 @@ $(document).ready(function() {
     if (jQuery.isEmptyObject(questionList)) {
       $('.questions-list').html('<h2>There aren\'t any questions!</h2>');
     } else {
+      
       var questionHTML = function(id, question) {
         return '<div class="question"><h2 data-id="' + id + '">' + id + '. ' + question + '</h2></div>';
       };
-      var answerHTML = function(answers, questionID) {
+      
+      var calculateAnswerPercent = function(totalResponses, answerResponseCount) {
+        var width = (answerResponseCount/totalResponses)*100;
+        return 'value="' + width + '"';
+      }
+      
+      var answerHTML = function(answers, questionData) {
         var html = '';
         answers.forEach(function(element) {
-          html += '<div class="answer"><span class="answer-text" data-answer-id="' + element.id + '" data-question-id="' + questionID + '">' + element.answer  + '</span><span class="votes">' + element.responses + '</span></div>'; 
+          html += '<div class="answer"><progress class="answer-bar" max="100" ' + calculateAnswerPercent(questionData.total_responses, element.responses) + '></progress><span class="answer-text" data-answer-id="' + element.id + '" data-question-id="' + questionData.id + '">' + element.answer  + '</span><span class="votes">' + element.responses + '</span></div>'; 
         });
         return html;
       };
+      
       questionList.forEach(function(questionData) {
-        var questionElement = '<div class="question-container">' + questionHTML(questionData.id, questionData.question) + answerHTML(questionData.answers, questionData.id) + '</div>';
+        var questionElement = '<div class="question-container">' + questionHTML(questionData.id, questionData.question) + answerHTML(questionData.answers, questionData) + '</div>';
         $('.questions-list').append(questionElement);
       });
     }

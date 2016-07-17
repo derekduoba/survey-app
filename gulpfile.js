@@ -3,8 +3,6 @@ var util = require('util');
 var exec = require('child_process').exec;
 var path = require('path');
 var fs = require('fs');
-//var babelify = require('babelify');
-//var browserify = require('browserify');
 var gulp = require('gulp');
 var autoprefixer = require('gulp-autoprefixer');
 var sass = require('gulp-sass');
@@ -13,39 +11,19 @@ var watch = require('gulp-watch');
 var uglify = require('gulp-uglify');
 var replace = require('gulp-replace');
 var minifyCSS = require('gulp-minify-css');
-//var transform = require('vinyl-transform');
-//var source = require('vinyl-source-stream');
 
-var input = "./public/stylesheets/*.scss";
-var output = "./public/stylesheets/";
+var input = './public/stylesheets/*.scss';
+var output = './public/stylesheets/';
 
 /**
  * Watches for changes to certain files and builds the site accordingly.
  */
-gulp.task("watch", function() {
+gulp.task('watch', function() {
   return gulp
-    .watch(input, ["sass"])
+    .watch(input, ['sass'])
     .on('change', function(event) {
       console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
     });
-});
-
-/**
- * Compiles es6 code into a browserify bundle.
- * NOTE: Not used currently
- */
-gulp.task('browserify', function () {
-  fs.readdirSync('./scripts').forEach(function(file) {
-    if (file.indexOf('.js') === -1) {
-      return;
-    }
-
-    browserify('./scripts/' + file, { debug: true })
-      .transform(babelify)
-      .bundle()
-      .pipe(source(file))
-      .pipe(gulp.dest('./template/scripts/'));
-  });
 });
 
 /**
@@ -53,7 +31,7 @@ gulp.task('browserify', function () {
  */
 gulp.task('sass', function () {
   var autoprefixerOptions = {
-      browsers: ["last 2 versions", "> 5%"]
+      browsers: ['last 2 versions', '> 5%']
   }
   var sassOptions = {
     errLogToConsole: true,
@@ -74,6 +52,6 @@ gulp.task('sass', function () {
 gulp.task('default', ['watch']);
 
 /**
- * Create a build task that does everything, including cache invalidation.
+ * Create a build task that does everything
  */
-gulp.task('build', ['sass', 'browserify']);
+gulp.task('build', ['sass']);

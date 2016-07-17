@@ -59,7 +59,7 @@ h2 {
   width: 100vw;
 }
 
-@media only screen and (orientation: landscape) and (max-width: 600px) {
+@media only screen and (orientation: landscape) and (max-width: 700px) {
   .header {
     height: 10vh;
   }
@@ -175,25 +175,57 @@ h2 {
 
 .container-fluid .questions-list .question-container .answer {
   background: #223F52;
-  padding: 1vw;
-  display: table;
+  padding: 0;
   margin-bottom: 1.5vh;
+  position: relative;
   width: 100%;
+}
+
+.container-fluid .questions-list .question-container .answer progress {
+  background: #1D1D26;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  -webkit-transition: width 300ms cubic-bezier(0.55, 0.085, 0.68, 0.53);
+  transition: width 300ms cubic-bezier(0.55, 0.085, 0.68, 0.53);
+  /* easeInQuad */
+}
+
+.container-fluid .questions-list .question-container .answer progress::-webkit-progress-bar {
+  background: #223F52;
+}
+
+.container-fluid .questions-list .question-container .answer progress::-webkit-progress-value {
+  background: #1D1D26;
 }
 
 .container-fluid .questions-list .question-container .answer .answer-text {
   color: #5BC3EB;
-  display: table-cell;
   font-size: 1.5em;
-  padding-left: 0;
+  padding: .5em;
+  position: relative;
   vertical-align: middle;
+}
+
+@media only screen and (max-width: 600px) {
+  .container-fluid .questions-list .question-container .answer .answer-text {
+    padding: .25em;
+  }
+}
+
+@media only screen and (orientation: landscape) and (max-width: 700px) {
+  .container-fluid .questions-list .question-container .answer .answer-text {
+    padding: .25em;
+  }
 }
 
 .container-fluid .questions-list .question-container .answer .votes {
   font-size: 1.5em;
-  color: #FFFFFF;
+  color: #5BC3EB;
   font-weight: 100;
   float: right;
+  padding: 1vw;
+  position: relative;
 }
 
 .container-fluid .form-group {
@@ -234,7 +266,7 @@ h2 {
   min-height: 50px;
 }
 
-@media only screen and (orientation: landscape) and (max-width: 600px) {
+@media only screen and (orientation: landscape) and (max-width: 700px) {
   .bottom-button-fill {
     height: 10vh;
   }
@@ -271,7 +303,7 @@ h2 {
   min-height: 50px;
 }
 
-@media only screen and (orientation: landscape) and (max-width: 600px) {
+@media only screen and (orientation: landscape) and (max-width: 700px) {
   .bottom-button-container .bottom-button, .bottom-button .bottom-button {
     height: 10vh;
   }
