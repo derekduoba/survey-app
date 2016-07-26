@@ -46,7 +46,7 @@ module.exports = function(app, dbController) {
       if (error) {
         res.status(400).json(questions);
       } else {
-        res.status(201).json(questions);
+        res.status(200).json(questions);
       }
     });
   });
@@ -126,6 +126,7 @@ module.exports = function(app, dbController) {
     });
 
   });
+
 
   /**
    * Post an answer to a given survey question

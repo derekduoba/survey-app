@@ -1,40 +1,39 @@
 {
-  'name': 'survey-app',
-  'version': '0.2.0',
-  'private': true,
-  'scripts': {
-    'start': 'node ./bin/www'
+  "name": "survey-app",
+  "version": "0.2.0",
+  "private": "true",
+  "scripts": {
+    "start": "node ./bin/www"
   },
-  'dependencies': {
-    'bluebird': '^3.4.1',
-    'body-parser': '^1.15.2',
-    'cookie-parser': '^1.4.3',
-    'debug': '*',
-    'express': '^4.14.0',
-    'express-validator': '^2.20.8',
-    'gulp': '*',
-    'gulp-minify-css': '*',
-    'gulp-replace': '*',
-    'jade': '*',
-    'js-cookie': '*',
-    'morgan': '^1.7.0',
-    'mysql': '^2.11.1',
-    'node-sass-middleware': '^0.9.8',
-    'sequelize': '^3.23.4',
-    'validator': '^5.4.0',
-    'vinyl-transform': '*'
+  "dependencies": {
+    "bluebird": "^3.4.1",
+    "body-parser": "^1.15.2",
+    "cookie-parser": "^1.4.3",
+    "debug": "*",
+    "express": "^4.14.0",
+    "express-validator": "^2.20.8",
+    "gulp": "*",
+    "gulp-minify-css": "*",
+    "gulp-replace": "*",
+    "jade": "*",
+    "js-cookie": "*",
+    "morgan": "^1.7.0",
+    "mysql": "^2.11.1",
+    "node-sass-middleware": "^0.9.8",
+    "sequelize": "^3.23.4",
+    "validator": "^5.4.0",
+    "vinyl-transform": "*"
   },
-  'description': 'A basic survey app',
-  'main': 'app.js',
-  'devDependencies': {},
-  'repository': {
-    'type': 'git',
-    'url': 'git+https://github.com/derekduoba/survey-app.git'
+  "description": "A basic survey app",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/derekduoba/survey-app.git"
   },
-  'author': 'Derek Duoba',
-  'license': 'ISC',
-  'bugs': {
-    'url': 'https://github.com/derekduoba/survey-app/issues'
+  "author": "Derek Duoba",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/derekduoba/survey-app/issues"
   },
-  'homepage': 'https://github.com/derekduoba/survey-app#readme'
+  "homepage": "https://github.com/derekduoba/survey-app#readme"
 }

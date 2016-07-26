@@ -8,6 +8,9 @@ $primary-color:#FFFFFF;
 $secondary-color:#5BC3EB;
 $tertiary-color:#FC6A4E;
 
+$header-font-weight:300;
+$copy-font-weight:100;
+
 *:not(.answer-selection) {
   border-radius: 0 !important;
 }
@@ -17,7 +20,7 @@ body {
   color:$primary-color;
   font-family:$font-stack;
   font-size:16px;
-  font-weight:100;
+  font-weight:$copy-font-weight;
 }
 html, body, .container-table {
   height: 100%;
@@ -26,7 +29,7 @@ a {
   color:$primary-color;
 }
 h1, h2 {
-  font-weight:100;
+  font-weight:$header-font-weight;
   margin:0;
 }
 h1 {
@@ -37,6 +40,34 @@ h2 {
   color:$primary-color;
   font-size:2.5em;
   @include respond-to(handhelds) { font-size:1.5em; }
+}
+input, textarea {
+  background:$background-color-2;
+  border:none;
+  color:$secondary-color !important;  
+}
+textarea:focus, input:focus {
+  color:$secondary-color !important;
+}
+::-webkit-input-placeholder, ::-webkit-input-placeholder:focus {
+  color:$secondary-color !important;
+}
+:-moz-placeholder {
+  color:$secondary-color;
+}
+::-moz-placeholder {
+  color:$secondary-color;
+}
+:-ms-input-placeholder {
+  color:$secondary-color;
+}
+.form-control {
+  background-color:$background-color-2;
+  border:none;
+
+  &:focus {
+    box-shadow:none;
+  }
 }
 .header {
   align-items:center;
@@ -56,7 +87,7 @@ h2 {
   flex-direction:column;
   min-height:100vh;
 
-  .qa, .create-wrapper, .questions-list {
+  .content {
     display: flex;
     flex:1;
     flex-direction:column;
@@ -67,14 +98,44 @@ h2 {
     overflow: auto;
     flex-align: center;
     align-items: flex-start;
-    box-align: center;;
+    box-align: center;
+  
+    h2 {
+      margin:auto;
+    }
   }
-  .create-wrapper {
+  .create-question, .question-results {
     width:100%;
+
+    .message {
+      margin:0 auto;
+      margin-bottom:5rem;
+    }
 
     .form-group {
       width:inherit;
     }
+
+    #question-url {
+      input {
+        background:$background-color-2;
+        border:none;
+        color:$secondary-color;  
+      }
+
+      #copy-button, .input-group-btn {
+        background:$secondary-color;
+        border:none;
+        color:$background-color-2;
+        font-weight:$header-font-weight;
+      }
+    }
+    
+    #view-result {
+      margin-top:5rem;
+      width:100%;
+    }
+
   }
   .question {
     margin:0 0 5vh 0;
@@ -109,8 +170,8 @@ h2 {
       vertical-align:middle;
     }
   }
-  .questions-list {
-    width:100%;
+  .question-results {
+    //width:100%;
 
     .question-container {
       background:$background-color-2; 
@@ -160,7 +221,7 @@ h2 {
         .votes {
           font-size:1.5em;
           color:$secondary-color;
-          font-weight:100;
+          font-weight:$copy-font-weight;
           float:right;
           padding:1vw;
           position:relative;
@@ -174,20 +235,11 @@ h2 {
     .question-field, .answer-field, .add-answer {
       margin-bottom:3vh;
     }
-    .form-control {
-      background-color:$background-color-2;
-      border:none;
-      color:$primary-color;
-
-      &:focus {
-        box-shadow:none;
-      }
-    }
   }
 }
-.add-answer {
+.add-answer, #view-result {
   background-color:$background-color-2;
-  font-weight:100;
+  font-weight:$header-font-weight;
 
   &:hover {
     color:$secondary-color;
@@ -214,7 +266,7 @@ h2 {
     color:$background-color-2;
     font-family:$font-stack !important;
     font-size:1.5em;
-    font-weight:100;
+    font-weight:$header-font-weight;
     height:7.5vh;
     @include respond-to(handhelds-landscape) { height:10vh; };
     @include respond-to(medium-screens-landscape) { height:10vh; };

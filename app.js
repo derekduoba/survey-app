@@ -8,7 +8,7 @@ var validator = require('validator');
 
 var Sequelize = require('sequelize');
 var sequelize = new Sequelize('survey_app', 'surveyuser', 'every1lovessurveys', {
-  host: "localhost",
+  host: 'localhost',
   port: 3306,
   dialect: 'mysql'
 });

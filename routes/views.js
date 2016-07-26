@@ -7,49 +7,67 @@
 module.exports = function(app) {
 
   /**
-   * Main page (survey questions)
+   * Main view (survey questions)
    **/
   app.get('/', function(req, res) {
-    res.render('answer-question', { title: 'Survey Time' });
+    res.render('create-question', { title: 'Survey Time' });
+  });
+
+  /**
+   * Add question view
+   **/
+  app.get('/create-question', function(req, res) {
+    res.render('create-question', { title: 'Create Question' });  
   });
 
   /**
    * Get a specific question by it's world-readable ID
    **/
-  app.get('/:questionID', function(req, res) {
+  app.get('/question/:questionID', function(req, res) {
      res.render('answer-question', { title: 'Survey Time', qid: req.params.questionID });
-  }
+  });
+
+  /**
+   * Get a specific question by it's world-readable ID
+   **/
+  app.get('/question/random', function(req, res) {
+     res.render('answer-question', { title: 'Survey Time', qid: req.params.questionID });
+  });
+
 
   /**
    * Login page to get to the admin interface
    * NOTE: Currently unused
-   **/
   app.get('/login', function(req, res) {
 
   });
+  **/
 
   /**
    * Logout page
    * NOTE: Currently unused
-   **/
   app.get('/logout', function(req, res) {
 
   });
+  **/
 
   /**
-   * Admin survey results page
+   * All survey results
    **/
-  app.get('/admin', function(req, res) {
-    res.render('admin', { title: 'All Questions' });
+  app.get('/results/list', function(req, res) {
+    res.render('results-list', { title: 'All Questions' });
   });
 
   /**
-   * Admin add question page
+   * View results view (single)
    **/
-  app.get('/admin/question', function(req, res) {
-    res.render('create-question', { title: 'Create Question' });  
+  app.get('/results/:questionID', function(req, res) {
+    res.render('single-results', { title: 'View Question Results' });  
   });
 
+  /**
+   * 404 page
+   **/
   app.get('*', function(req, res){
     res.render('404', { title: 'Survey Time' });
   });
