@@ -216,10 +216,12 @@ textarea:focus, input:focus {
   vertical-align: middle;
 }
 
-.container-fluid .question-results .question-container {
-  background: #2A4F66;
+.container-fluid .question-results.list .question-container {
   margin-bottom: 5vh;
   padding: 2.5vh;
+}
+
+.container-fluid .question-results .question-container {
   width: 100%;
 }
 
@@ -254,7 +256,7 @@ textarea:focus, input:focus {
 }
 
 .container-fluid .question-results .question-container .answer progress::-webkit-progress-value {
-  background: #1D1D26;
+  background: #2A4F66;
 }
 
 .container-fluid .question-results .question-container .answer .answer-text {

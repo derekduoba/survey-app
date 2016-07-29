@@ -171,13 +171,20 @@ textarea:focus, input:focus {
     }
   }
   .question-results {
-    //width:100%;
+
+    &.list {
+      .question-container {
+        //background:$background-color-2;
+        margin-bottom:5vh;
+        padding:2.5vh;
+      }
+    }
 
     .question-container {
-      background:$background-color-2; 
-      margin-bottom:5vh;
-      padding:2.5vh;
+      //background:$background-color-2; 
+      //padding:2.5vh;
       width:100%;
+
 
       .question {
         margin-bottom:4vh;        
@@ -206,7 +213,8 @@ textarea:focus, input:focus {
         }
 
         progress::-webkit-progress-value {
-          background:$background-color-1;
+          //background:$background-color-1;
+          background:$background-color-2;
         }
 
         .answer-text {
