@@ -1,0 +1,14 @@
+version: "2"
+services: 
+  app:
+    build: ./survey-app
+    ports: 
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_HOST=db
+  db:
+    build: ./survey-db
+
+  

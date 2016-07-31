@@ -1,2 +1,2 @@
-node_modules/
-.eslint**
+survey-app/node_modules/
+survey-app/.eslint**
