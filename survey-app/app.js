@@ -10,9 +10,15 @@ var Sequelize = require('sequelize');
 var sequelize = new Sequelize('survey_app', 'surveyuser', 'every1lovessurveys', {
   host: process.env.DATABASE_HOST,
   port: 3306,
-  dialect: 'mysql'
+  dialect: 'mysql',
+  retry: {
+    max: 100
+  }
 });
 var db = require('./models/model.js')(sequelize);
+
+
+
 var dbController = require('./lib/database.js')
 dbController.init(db);
 

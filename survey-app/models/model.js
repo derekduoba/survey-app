@@ -49,16 +49,45 @@ module.exports = function(sequelize) {
   questions.hasMany(answers, {
     foreignKey: 'question_id', 
   });
+
+
+  var delay = function(delayMS) {
+    return new Promise(function(resolve){
+      setTimeout(resolve, delayMS);
+    });
+  };
   
-  //NOTE: UNCOMMENT TO ALLOW AUTO TABLE DROPPING
-  //sequelize.sync({force: true}).then(function() {
-  sequelize.sync().then(function() {
-    console.log('DB Model Initialized');
-  }).catch(function(error) {
-    console.log('Error during table creation.');
-    console.log(error);
-  });
 
-  return {users: users, questions: questions, answers: answers};
+  var retryFunction = function(functionToRetry, initialTimeout, increment) {
+    return functionToRetry().catch(function(err) {
+      console.log('ERROR: ' + err);
+      console.log('Retrying...');
+      return delay(initialTimeout).then(function(){
+        return retryFunction(functionToRetry, initialTimeout + increment, increment);
+      });
+    });
+  };
 
+
+  var retryFunctionWithTimeout = function(functionToRetry, initialTimeout, increment, maxTimeout) {
+    var overallTimeout = delay(maxTimeout).then(function(){
+      functionToRetry = function(){ return Promise.resolve() };
+      throw new Error('Database could not be reached after maximum timeout (' + maxTimeout + 'ms)');
+    }).catch(function(err) { 
+      // TODO: This is a fatal application error and must be handled appropriately
+      console.log(err); 
+    });
+    
+    var operation = retryFunction(function(){
+      return functionToRetry();
+    }, initialTimeout, increment);
+    return Promise.race([operation, overallTimeout]);
+  };
+
+  
+  // NOTE: Uncomment to drop any preexisting table (DANGEROUS)
+  //retryFunctionWithTimeout(function() { return sequelize.sync({force: true}).then(function() { console.log('Database connected'); }); } , 1000, 1000, 6000);
+  retryFunctionWithTimeout(function() { return sequelize.sync().then(function() { console.log('Database model initialized'); }); } , 1000, 1000, 60000);
+
+  return {users: users, questions: questions, answers: answers}
 };

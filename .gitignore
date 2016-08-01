@@ -1,2 +1,4 @@
 survey-app/node_modules/
 survey-app/.eslint**
+
+.eslint**
