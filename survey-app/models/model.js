@@ -90,7 +90,7 @@ module.exports = function(sequelize) {
     return sequelize.sync().then(function() { 
       console.log('Database model initialized'); 
     })
-  }, 1000, 1000, 60000).catch(function(err) { 
+  }, 1000, 1000, 300000).catch(function(err) { 
     // TODO: This is a fatal error; handle it appropriately
     console.log(err); 
   });

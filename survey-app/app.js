@@ -6,9 +6,14 @@ var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var validator = require('validator');
 
+var dbHost = process.env.DATABASE_HOST || 'localhost';
+var dbName = process.env.MYSQL_DATABASE || 'survey_app';
+var dbUser = process.env.MYSQL_USER || 'surveyuser';
+var dbPassword = process.env.MYSQL_PW || 'every1lovessurveys';
+
 var Sequelize = require('sequelize');
-var sequelize = new Sequelize('survey_app', 'surveyuser', 'every1lovessurveys', {
-  host: process.env.DATABASE_HOST,
+var sequelize = new Sequelize(dbName, dbUser, dbPassword, {
+  host: dbHost,
   port: 3306,
   dialect: 'mysql',
   retry: {
@@ -16,9 +21,6 @@ var sequelize = new Sequelize('survey_app', 'surveyuser', 'every1lovessurveys', 
   }
 });
 var db = require('./models/model.js')(sequelize);
-
-
-
 var dbController = require('./lib/database.js')
 dbController.init(db);
 

@@ -6,9 +6,9 @@ services:
       - "3000:3000"
     depends_on:
       - db
-    environment:
-      - DATABASE_HOST=db
+    env_file: ./database.env
   db:
     build: ./survey-db
+    env_file: ./database.env
 
   
