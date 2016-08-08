@@ -1,30 +1,30 @@
-var express = require('express');
-var path = require('path');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var expressValidator = require('express-validator');
-var validator = require('validator');
+const express = require('express');
+const path = require('path');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const expressValidator = require('express-validator');
+const validator = require('validator');
 
-var dbHost = process.env.DATABASE_HOST || 'localhost';
-var dbName = process.env.MYSQL_DATABASE || 'survey_app';
-var dbUser = process.env.MYSQL_USER || 'surveyuser';
-var dbPassword = process.env.MYSQL_PW || 'every1lovessurveys';
+const dbHost = process.env.DATABASE_HOST || 'localhost';
+const dbName = process.env.MYSQL_DATABASE || 'survey_app';
+const dbUser = process.env.MYSQL_USER || 'surveyuser';
+const dbPassword = process.env.MYSQL_PW || 'every1lovessurveys';
 
-var Sequelize = require('sequelize');
-var sequelize = new Sequelize(dbName, dbUser, dbPassword, {
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
   host: dbHost,
   port: 3306,
   dialect: 'mysql',
   retry: {
-    max: 100
-  }
+    max: 100,
+  },
 });
-var db = require('./models/model.js')(sequelize);
-var dbController = require('./lib/database.js')
+const db = require('./models/model.js')(sequelize);
+const dbController = require('./lib/database.js');
 dbController.init(db);
 
-var app = express();
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -35,61 +35,62 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressValidator({
   customValidators: {
-    isNotUndefined: function(value) {
+    isNotUndefined(value) {
       return typeof value !== 'undefined';
     },
-    isArray: function(value) {
+    isArray(value) {
       return Array.isArray(value);
     },
-    answersAreNotEmpty: function(values) {
-      return values.every(function(value) {
+    answersAreNotEmpty(values) {
+      return values.every((value) => {
         if (validator.isNull(value)) {
           return false;
-        } else {
-          return true;
         }
+        return true;
       });
     },
-    randomContainsNumbers: function(values) {
+    answersAreNotTooLong(values) {
+      return values.every((value) => (value.length <= 255));
+    },
+    questionIsNotTooLong(value) {
+      return (value.length <= 255);
+    },
+    randomContainsNumbers(values) {
       if (values.length === 0) {
         return true;
       } else if (values.length === 1 && values[0] === '') {
         return true;
-      } else {
-        return values.every(function(value) {
-          if (validator.isInt(value)) {
-            return true;
-          } else {
-            return false;
-          }
-        });
       }
-    }
+      return values.every((value) => {
+        if (validator.isInt(value)) {
+          return true;
+        }
+        return false;
+      });
+    },
   },
   customSanitizers: {
-    trimAnswers: function(values) {
-      return values.map(function(value) {
-        return value.trim();
-      });
-    }
-  }
+    trimAnswers(values) {
+      return values.map((value) => value.trim());
+    },
+  },
 }));
 app.use(cookieParser());
 app.use(require('node-sass-middleware')({
   src: path.join(__dirname, 'public'),
   dest: path.join(__dirname, 'public'),
   indentedSyntax: true,
-  sourceMap: true
+  sourceMap: true,
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
-var api = require('./routes/api')(app, dbController);
-var views = require('./routes/views')(app);
+require('./routes/api')(app, dbController);
+require('./routes/views')(app);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+app.use((req, res, next) => {
+  const err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
@@ -99,30 +100,28 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  console.log("DEVELOPMENT MODE");
-  app.use(function(err, req, res, next) {
+  console.log('DEVELOPMENT MODE');
+  app.use((err, req, res) => {
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
-      error: err
+      error: err,
     });
   });
 }
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+app.use((err, req, res) => {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,
-    error: {}
+    error: {},
   });
 });
 
 app.set('env', 'development');
 app.set('port', (process.env.PORT || 3000));
-app.listen(app.get('port'), function() {
-  console.log('Server started: http://localhost:' + app.get('port') + '/');
+app.listen(app.get('port'), () => {
+  console.log(`Server started: http://localhost:${app.get('port')}/`);
 });
-
-//module.exports = app;

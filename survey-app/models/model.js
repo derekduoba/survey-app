@@ -2,98 +2,87 @@
  * Database model
  **/
 
-var Sequelize = require('sequelize');
+const Sequelize = require('sequelize');
 
-module.exports = function(sequelize) {
-
+module.exports = function (sequelize) {
   // User table
-  var users  = sequelize.define('users', {
+  const users = sequelize.define('users', {
     id: {
       type: Sequelize.INTEGER,
       autoIncrement: true,
-      primaryKey: true
+      primaryKey: true,
     },
-    name:Sequelize.STRING,
-    password: Sequelize.STRING
+    name: Sequelize.STRING,
+    password: Sequelize.STRING,
   });
 
   // Question table
-  var questions = sequelize.define('questions', {
+  const questions = sequelize.define('questions', {
     id: {
       type: Sequelize.INTEGER,
       autoIncrement: true,
-      primaryKey: true
+      primaryKey: true,
     },
     total_responses: {
       type: Sequelize.INTEGER,
-      defaultValue:0
+      defaultValue: 0,
     },
-    question:Sequelize.STRING
+    question: Sequelize.STRING,
   });
 
   // Answer table
-  var answers = sequelize.define('answers', {
+  const answers = sequelize.define('answers', {
     id: {
       type: Sequelize.INTEGER,
       autoIncrement: true,
-      primaryKey: true
+      primaryKey: true,
     },
-    answer:Sequelize.STRING,
-    responses: { 
+    answer: Sequelize.STRING,
+    responses: {
       type: Sequelize.INTEGER,
-      defaultValue: 0
-    }
+      defaultValue: 0,
+    },
   });
 
   // question_id becomes a foreign key on answer
   questions.hasMany(answers, {
-    foreignKey: 'question_id', 
+    foreignKey: 'question_id',
   });
 
 
-  var delay = function(delayMS) {
-    return new Promise(function(resolve) {
-      setTimeout(resolve, delayMS);
+  function delay(delayMS) {
+    return new Promise((resolve) => setTimeout(resolve, delayMS));
+  };
+
+
+  function retryFunction(functionToRetry, initialTimeout, increment) {
+    return functionToRetry().catch((err) => {
+      console.log(`ERROR: ${err} \n Retrying...`);
+      return delay(initialTimeout).then(() =>
+        retryFunction(functionToRetry, initialTimeout + increment, increment
+      ));
     });
   };
 
 
-  var retryFunction = function(functionToRetry, initialTimeout, increment) {
-    return functionToRetry().catch(function(err) {
-      console.log('ERROR: ' + err);
-      console.log('Retrying...');
-      return delay(initialTimeout).then(function(){
-        return retryFunction(functionToRetry, initialTimeout + increment, increment);
-      });
+  function retryFunctionWithTimeout(functionToRetry, initialTimeout, increment, maxTimeout) {
+    const overallTimeout = delay(maxTimeout).then(() => {
+      // eslint-disable-next-line no-param-reassign
+      functionToRetry = () => Promise.resolve();
+      throw new Error(`Database could not be reached after maximum timeout (${maxTimeout} ms)`);
     });
-  };
-
-
-  var retryFunctionWithTimeout = function(functionToRetry, initialTimeout, increment, maxTimeout) {
-    
-    var overallTimeout = delay(maxTimeout).then(function() {
-      functionToRetry = function() { return Promise.resolve() };
-      throw new Error('Database could not be reached after maximum timeout (' + maxTimeout + 'ms)');
-    });
-
-    var operation = retryFunction(function(){
-      return functionToRetry();
-    }, initialTimeout, increment);
-
+    const operation = retryFunction(() => functionToRetry(), initialTimeout, increment);
     return Promise.race([operation, overallTimeout]);
   };
 
 
   // NOTE: Use the following to drop any preexisting tables (DANGEROUS)
-  // sequelize.sync({ force: true })
-  retryFunctionWithTimeout(function() { 
-    return sequelize.sync().then(function() { 
-      console.log('Database model initialized'); 
-    })
-  }, 1000, 1000, 300000).catch(function(err) { 
-    // TODO: This is a fatal error; handle it appropriately
-    console.log(err); 
-  });
+  retryFunctionWithTimeout(() =>
+    sequelize.sync().then(() => console.log('Database model initialized')),
+    1e3,
+    1e3,
+    300e3
+  ).catch((err) => console.error(err)); // TODO: Handle fatal error accordingly
 
-  return {users: users, questions: questions, answers: answers}
+  return { users, questions, answers };
 };

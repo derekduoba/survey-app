@@ -4,35 +4,34 @@
  *
  **/
 
-module.exports = function(app) {
-
+module.exports = (app) => {
   /**
    * Main view (survey questions)
    **/
-  app.get('/', function(req, res) {
-    res.render('create-question', { title: 'Survey Time' });
-  });
+  app.get('/', (req, res) =>
+    res.render('create-question', { title: 'Survey Time' })
+  );
 
   /**
    * Add question view
    **/
-  app.get('/create-question', function(req, res) {
-    res.render('create-question', { title: 'Create Question' });  
-  });
+  app.get('/create-question', (req, res) =>
+    res.render('create-question', { title: 'Create Question' })
+  );
 
   /**
    * Get a specific question by it's world-readable ID
    **/
-  app.get('/question/:questionID', function(req, res) {
-     res.render('answer-question', { title: 'Survey Time', qid: req.params.questionID });
-  });
+  app.get('/question/:questionID', (req, res) =>
+     res.render('answer-question', { title: 'Survey Time', qid: req.params.questionID })
+  );
 
   /**
    * Get a specific question by it's world-readable ID
    **/
-  app.get('/question/random', function(req, res) {
-     res.render('answer-question', { title: 'Survey Time', qid: req.params.questionID });
-  });
+  app.get('/question/random', (req, res) =>
+     res.render('answer-question', { title: 'Survey Time', qid: req.params.questionID })
+  );
 
 
   /**
@@ -54,22 +53,21 @@ module.exports = function(app) {
   /**
    * All survey results
    **/
-  app.get('/results/list', function(req, res) {
-    res.render('results-list', { title: 'All Questions' });
-  });
+  app.get('/results/list', (req, res) =>
+    res.render('results-list', { title: 'All Questions' })
+  );
 
   /**
    * View results view (single)
    **/
-  app.get('/results/:questionID', function(req, res) {
-    res.render('single-results', { title: 'View Question Results' });  
-  });
+  app.get('/results/:questionID', (req, res) =>
+    res.render('single-results', { title: 'View Question Results' })
+  );
 
   /**
    * 404 page
    **/
-  app.get('*', function(req, res){
-    res.render('404', { title: 'Survey Time' });
-  });
-
-}
+  app.get('*', (req, res) =>
+    res.render('404', { title: 'Survey Time' })
+  );
+};

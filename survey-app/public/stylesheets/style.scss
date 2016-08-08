@@ -1,9 +1,9 @@
 @import 'mixins';
 
 $font-stack: 'Roboto', 'Helvetica', sans-serif;
-$background-color-1:#1D1D26;
-$background-color-2:#2A4F66;
-$background-color-3:#223F52;
+$background-color-dark:#1D1D26; // dark
+$background-color-med:#153a51; // med
+$background-color-light:#1E5171; // light
 $primary-color:#FFFFFF;
 $secondary-color:#5BC3EB;
 $tertiary-color:#FC6A4E;
@@ -16,7 +16,7 @@ $copy-font-weight:100;
 }
 
 body {
-  background-color:$background-color-1;
+  background-color:$background-color-dark;
   color:$primary-color;
   font-family:$font-stack;
   font-size:16px;
@@ -42,7 +42,7 @@ h2 {
   @include respond-to(handhelds) { font-size:1.5em; }
 }
 input, textarea {
-  background:$background-color-2;
+  background:$background-color-light;
   border:none;
   color:$secondary-color !important;  
 }
@@ -62,7 +62,7 @@ textarea:focus, input:focus {
   color:$secondary-color;
 }
 .form-control {
-  background-color:$background-color-2;
+  background-color:$background-color-med;
   border:none;
 
   &:focus {
@@ -118,7 +118,8 @@ textarea:focus, input:focus {
 
     #question-url {
       input {
-        background:$background-color-2;
+        //background:$background-color-light;
+        background:$background-color-med;
         border:none;
         color:$secondary-color;  
       }
@@ -126,7 +127,7 @@ textarea:focus, input:focus {
       #copy-button, .input-group-btn {
         background:$secondary-color;
         border:none;
-        color:$background-color-2;
+        color:$background-color-med;
         font-weight:$header-font-weight;
       }
     }
@@ -146,7 +147,7 @@ textarea:focus, input:focus {
     vertical-align:middle;
 
     .answer-selection {
-      background:$background-color-1;
+      background:$background-color-dark;
       float:left;
       text-transform:uppercase;
       -moz-appearance:none;
@@ -174,14 +175,14 @@ textarea:focus, input:focus {
 
     &.list {
       .question-container {
-        //background:$background-color-2;
+        //background:$background-color-light;
         margin-bottom:5vh;
         padding:2.5vh;
       }
     }
 
     .question-container {
-      //background:$background-color-2; 
+      //background:$background-color-light; 
       //padding:2.5vh;
       width:100%;
 
@@ -194,14 +195,14 @@ textarea:focus, input:focus {
         }
       }
       .answer {
-        background:$background-color-3;
+        background:$background-color-med;
         padding:0;
         margin-bottom:1.5vh;
         position:relative;
         width:100%;         
 
         progress {
-          background:$background-color-1;
+          background:$background-color-dark;
           height:100%;
           position:absolute;
           width:100%;
@@ -209,12 +210,12 @@ textarea:focus, input:focus {
         }
 
         progress::-webkit-progress-bar {
-          background:$background-color-3;
+          background:$background-color-med;
         }
 
         progress::-webkit-progress-value {
-          //background:$background-color-1;
-          background:$background-color-2;
+          //background:$background-color-dark;
+          background:$background-color-light;
         }
 
         .answer-text {
@@ -231,7 +232,7 @@ textarea:focus, input:focus {
           color:$secondary-color;
           font-weight:$copy-font-weight;
           float:right;
-          padding:1vw;
+          padding:.5em;
           position:relative;
         }
       }
@@ -246,7 +247,7 @@ textarea:focus, input:focus {
   }
 }
 .add-answer, #view-result {
-  background-color:$background-color-2;
+  background-color:$background-color-light;
   font-weight:$header-font-weight;
 
   &:hover {
@@ -263,15 +264,15 @@ textarea:focus, input:focus {
 }
 .bottom-button-container, .bottom-button {
   bottom:0;
-  display:flex;
-  flex:none;
+  //display:flex;
+  //flex:none;
   justify-content:center;
   left:0;
   position:fixed;
 
   .bottom-button {
     background-color:$secondary-color;
-    color:$background-color-2;
+    color:$background-color-light;
     font-family:$font-stack !important;
     font-size:1.5em;
     font-weight:$header-font-weight;
@@ -279,6 +280,7 @@ textarea:focus, input:focus {
     @include respond-to(handhelds-landscape) { height:10vh; };
     @include respond-to(medium-screens-landscape) { height:10vh; };
     min-height:50px;
+    text-align:center;
 
     &:hover {
       background-color:$primary-color;
