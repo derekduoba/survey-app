@@ -15,6 +15,7 @@ module.exports = function (app, dbController) {
     res.send(400);
   };
 
+
   /**
    * Get a survey question (or all questions)
    * TODO: This API could be extended to allow for batches of answers to
@@ -26,13 +27,14 @@ module.exports = function (app, dbController) {
    *  seen questions (can be empty)
    * @return {Array.Object} - Array of Json containing the survey question and answers
    *  @param {Number} id - The question ID
+   *  @param {Number} admin_key - User administration key
    *  @param {String} question - The question
    *  @param {Array.<Object>} - Answer data
    *    @param {Number} id - Answer ID
    *    @param {String} answer - Answer
    *    @param {Number} votes - Number of votes
    **/
-  app.get('/question', (req, res) => {
+  app.get('/api/question', (req, res) => {
     try {
       req.check('qid', '"qid" is not a Number').optional().isInt();
       req.check('random', '"random" is undefined or is not an Array of Numbers')
@@ -62,8 +64,10 @@ module.exports = function (app, dbController) {
    *  @param {Array.<String>} answers - The answers
    * @return {Object} - Question Info
    *  @param {Number} id - Question ID; Will be blank on failure (check the HTTP status code)
+   *  @param {Number} admin_key - User administration key; Will be blank on failure
+   *    (check the HTTP status code)
    **/
-  app.put('/question', (req, res) => {
+  app.post('/api/question', (req, res) => {
     try {
       req.sanitize('question').trim();
       req.sanitize('answers').trimAnswers();
@@ -96,12 +100,12 @@ module.exports = function (app, dbController) {
 
 
   /**
-   * Delete a survey question. A user must have a valid admin ID to delete a question.
+   * Delete a survey question.
    * @TODO: Authorized users only
    * @param {number} id - A question ID (e.g. 123)
    * @return {Number} - An HTTP status code (200 means you deleted that sucker)
    **/
-  app.delete('/question', (req, res) => {
+  app.delete('/api/question', (req, res) => {
     try {
       req.checkBody('qid', '"qid" is undefined or not a Number').isNotUndefined().isInt();
       const data = req.body;
@@ -110,8 +114,8 @@ module.exports = function (app, dbController) {
         handleValidationErrors(res, 'INPUT DATA ERROR', error);
         return;
       };
-      dbController.deleteQuestion(data.qid, (deleteRes) => (
-        (deleteRes) ? deleteRes.sendStatus(204) : deleteRes.status(400).send({ status: 'failure' })
+      dbController.deleteQuestion(data.qid, (success) => (
+        (success) ? res.sendStatus(204) : res.status(400).send({ status: 'failure' })
       ));
     } catch (error) {
       handleValidationErrors(res, 'VALIDATION ERROR', error);
@@ -121,14 +125,14 @@ module.exports = function (app, dbController) {
 
 
   /**
-   * Post an answer to a given survey question
+   * Answer a given survey question
    * TODO: Prevent a user from answering multiple times via:
-   * cookie, IP, rate-limiting?
+   * cookie, IP, rate-limiting? (make idempotent)
    * the same survey question multiple times
    * @param {Number} qid - A question ID (e.g. 123)
    * @param {Number} aid - An answer ID (e.g. 3)
    **/
-  app.post('/question', (req, res) => {
+  app.put('/api/question', (req, res) => {
     try {
       req.checkBody('aid', '"aid" is undefined or not a Number').isNotUndefined().isInt();
       req.checkBody('qid', '"qid" is undefined or not a Number').isNotUndefined().isInt();

@@ -8,6 +8,13 @@ $(document).ready(function () {
   /** Functions **/
 
   /**
+   * Log errors
+   **/
+  function logError(error) {
+    console.error('ERROR:\n ' + JSON.stringify(error));
+  };
+
+  /**
    * Add an answer field to the question creation form
    */
   function addAnswer(container) {
@@ -26,21 +33,18 @@ $(document).ready(function () {
       answers: answers
     };
     $.ajax({
-      type: 'PUT',
+      type: 'POST',
       contentType: 'application/json',
       dataType: 'json',
-      url: '/question',
-      headers: { 'X-HTTP-Method-Override': 'PUT' },
+      url: '/api/question',
+      headers: { 'X-HTTP-Method-Override': 'POST' },
       data: JSON.stringify(questionInfo)
     }).done(function (res) {
       $('.bottom-button').html('Question Created!');
       $('.create-question').data('question-created', true);
-      var questionURL = window.location.origin + '/question/' + res.id;
-      $('.content').html(
-      /* eslint-disable prefer-template */
-      '<h2 class="message">Here\'s a link to your question</h2>' + '<form>' + '<div id="question-url" class="input-group">' + '<input type="text" id="copy-input" class="form-control input-lg" value="' + questionURL + '" placeholder="Question URL">' + '<span class="input-group-btn">' + '<button class="btn btn-lg" type="button" id="copy-button" data-placement="button" title="Copy to Clipboard">' + 'Copy Link' + '</button>' + '</span>' + '</div>' + '<button class="btn btn-lg" type="button" id="view-result" data-placement="button" data-question-id="' + res.id + '" title="View Results">' + 'View Results' + '</button>' + '</form>');
+      window.location = window.location.origin + '/admin/' + res.admin_key;
     }).fail(function (error) {
-      return console.error('ERROR:\n ' + error);
+      return logError(error);
     });
   };
 
@@ -64,13 +68,31 @@ $(document).ready(function () {
   };
 
   /**
+   * Delete a question
+   **/
+  function deleteQuestion(qID) {
+    $.ajax({
+      type: 'DELETE',
+      contentType: 'application/json',
+      dataType: 'json',
+      url: '/api/question',
+      headers: { 'X-HTTP-Method-Override': 'DELETE' },
+      data: JSON.stringify({ qid: qID })
+    }).done(function () {
+      window.location = window.location.origin + '/';
+    }).fail(function (error) {
+      return logError(error);
+    });
+  };
+
+  /**
    * Get information about a question (or a list of questions)
    */
   function getQuestionData(qID, random, successFunction) {
     // Add a space to an empty random array in order to allow it to be passed via ajax (lol jQuery)
     if (typeof random !== 'undefined' && random.length === 0) {
       random.push('');
-    }
+    };
 
     var questionInfo = {
       qid: qID,
@@ -80,13 +102,13 @@ $(document).ready(function () {
       type: 'GET',
       contentType: 'application/json',
       dataType: 'json',
-      url: '/question',
+      url: '/api/question',
       headers: { 'X-HTTP-Method-Override': 'GET' },
       data: questionInfo
     }).done(function (res, status) {
       return successFunction(res, status);
     }).fail(function (error) {
-      return console.error('ERROR: \n ' + error);
+      return logError(error);
     });
   };
 
@@ -129,7 +151,7 @@ $(document).ready(function () {
    **/
   function renderQuestionResult(questionData) {
     function questionHTML(id, question) {
-      return '<div class="question"><h2 data-id="' + id + '">' + id + '. ' + question + '</h2></div>';
+      return '<div class="question"><h2 data-id="' + id + '">' + question + '</h2></div>';
     };
 
     function calculateAnswerPercent(totalResponses, answerResponseCount) {
@@ -179,10 +201,10 @@ $(document).ready(function () {
    */
   function submitAnswer(answerData) {
     $.ajax({
-      type: 'POST',
+      type: 'PUT',
       contentType: 'application/json',
       dataType: 'json',
-      url: '/question',
+      url: '/api/question',
       data: JSON.stringify(answerData)
     }).done(function () {
       var seenQuestions = getQuestionCookie();
@@ -190,7 +212,7 @@ $(document).ready(function () {
       Cookies.set('seen-questions', JSON.stringify(seenQuestions), { expires: 1 });
       var page = $(location).attr('pathname');
       switch (page) {
-        case '/question/random':
+        case '/answer/random':
           getQuestionData(undefined, seenQuestions, function (res) {
             return renderQuestion(res[0]);
           });
@@ -200,7 +222,7 @@ $(document).ready(function () {
           break;
       }
     }).fail(function (error) {
-      return console.log('ERROR: \n ' + error);
+      return logError(error);
     });
   };
 
@@ -252,7 +274,7 @@ $(document).ready(function () {
   /** UI ACTIONS **/
 
   /** Add answer **/
-  $('.add-answer').on('click', function () {
+  $('#add-answer').on('click', function () {
     addAnswer($('.answers'));
   });
 
@@ -300,6 +322,14 @@ $(document).ready(function () {
   $(document).on('click', '#view-result', function () {
     var qID = $(this).data('question-id');
     window.open(window.location.origin + '/results/' + qID, '_blank');
+  });
+
+  /** Delete question **/
+  $(document).on('click', '#delete-question', function () {
+    var qID = $(this).data('question-id');
+    if (confirm('Really delete this question?')) {
+      deleteQuestion(qID);
+    };
   });
 
   /** END UI ACTIONS **/

@@ -4,6 +4,7 @@
  * promises at some point
  **/
 
+const Hashids = require('hashids');
 const sequelize = require('sequelize');
 
 module.exports = (function () {
@@ -31,6 +32,7 @@ module.exports = (function () {
      *  @param {Array.<String>} answers - The answers
      * @return {Object} - Question Info
      *  @param {Number} id - Question ID; Will be blank on failure
+     *  @param {Number} admin_key - The user administration key; Will be blank on failure
      */
     createQuestion(questionData, callback) {
       sequelize.Promise.resolve({}).then(() => {
@@ -42,7 +44,10 @@ module.exports = (function () {
           });
         })
         .then(() => {
-          callback({ id: this.question.id });
+          callback({
+            id: this.question.id,
+            admin_key: new Hashids('survey time', 10).encode(this.question.id),
+          });
         }).
         catch((error) => {
           logError(error);
@@ -73,6 +78,7 @@ module.exports = (function () {
      * @return {Array.Object} or {Object} - Array of objects containing the survey
      *  questions and answers. The array will be empty if no questions are found
      *  @param {Number} qid - The question ID
+     *  @param {Number} admin_key - The user administration key
      *  @param {String} question - The question
      *  @param {Number} total_responses - The total number of responses to the current question
      *  @param {Array.<Object>} - Answer data
@@ -84,6 +90,7 @@ module.exports = (function () {
       function formatQuestionData(questions) {
         return questions.map((question) => ({
           id: question.id,
+          admin_key: new Hashids('survey time', 10).encode(question.id),
           question: question.dataValues.question,
           total_responses: question.dataValues.total_responses,
           answers: question.dataValues.answers.map((a) => a.dataValues),

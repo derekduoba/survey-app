@@ -104,7 +104,7 @@ textarea:focus, input:focus {
       margin:auto;
     }
   }
-  .create-question, .question-results {
+  .administer-question, .create-question, .question-results {
     width:100%;
 
     .message {
@@ -129,10 +129,11 @@ textarea:focus, input:focus {
         border:none;
         color:$background-color-med;
         font-weight:$header-font-weight;
+        margin:0;
       }
     }
     
-    #view-result {
+    .btn {
       margin-top:5rem;
       width:100%;
     }
@@ -179,20 +180,18 @@ textarea:focus, input:focus {
         margin-bottom:5vh;
         padding:2.5vh;
       }
-    }
+      h2 {
+        font-size:1.5em;
+      }
+  }
 
     .question-container {
       //background:$background-color-light; 
       //padding:2.5vh;
       width:100%;
 
-
       .question {
         margin-bottom:4vh;        
- 
-        h2 {
-          font-size:1.5em;
-        }
       }
       .answer {
         background:$background-color-med;
@@ -241,16 +240,22 @@ textarea:focus, input:focus {
   .form-group {
     margin:0;
 
-    .question-field, .answer-field, .add-answer {
+    .question-field {
+      margin-bottom:5vh;
+    }
+    .answer-field, .add-answer {
       margin-bottom:3vh;
+    }
+    .answer-field:last-child {
+      margin-bottom:0;
     }
   }
 }
-.add-answer, #view-result {
+.form-btn {
   background-color:$background-color-light;
   font-weight:$header-font-weight;
 
-  &:hover {
+  &:hover, &:focus {
     color:$secondary-color;
   }
 }

@@ -17,6 +17,7 @@
     "gulp-minify-css": "*",
     "gulp-sass": "*",
     "gulp-uglify": "*",
+    "hashids": "^1.1.0",
     "jade": "*",
     "js-cookie": "*",
     "morgan": "^1.7.0",
