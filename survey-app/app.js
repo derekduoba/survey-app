@@ -86,7 +86,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
 require('./routes/api')(app, dbController);
-require('./routes/views')(app);
+require('./routes/views')(app, dbController);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

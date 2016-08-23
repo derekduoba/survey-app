@@ -1,0 +1,11 @@
+extends layout.jade
+block internals
+  div.content.administer-question.row
+    h2.message Here's a link to your question:
+    form
+      #question-url.input-group
+        input#copy-input.form-control.input-lg(type="text", value="#{qURL}", placeholder="Question URL")
+        span.input-group-btn
+          button#copy-button.btn.btn-lg(type="button" data-placement="button", title="Copy to Clipboard") Copy Link
+      button#view-result.btn.btn-lg.form-btn(type="button", data-placement="button", data-question-id="#{qID}", title="View Results") View Results
+      button#delete-question.btn.btn-lg.form-btn(type="button", data-placement="button", data-question-id="#{qID}", title="Delete Question") Delete Question

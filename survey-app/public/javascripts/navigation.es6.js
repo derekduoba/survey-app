@@ -7,6 +7,13 @@ $(document).ready(() => {
   /** Functions **/
 
   /**
+   * Log errors
+   **/
+  function logError(error) {
+    console.error(`ERROR:\n ${JSON.stringify(error)}`);
+  };
+
+  /**
    * Add an answer field to the question creation form
    */
   function addAnswer(container, answer = 'Add an answer here...') {
@@ -24,34 +31,17 @@ $(document).ready(() => {
       answers,
     };
     $.ajax({
-      type: 'PUT',
+      type: 'POST',
       contentType: 'application/json',
       dataType: 'json',
-      url: '/question',
-      headers: { 'X-HTTP-Method-Override': 'PUT' },
+      url: '/api/question',
+      headers: { 'X-HTTP-Method-Override': 'POST' },
       data: JSON.stringify(questionInfo),
     }).done((res) => {
       $('.bottom-button').html('Question Created!');
       $('.create-question').data('question-created', true);
-      const questionURL = `${window.location.origin}/question/${res.id}`;
-      $('.content').html(
-        /* eslint-disable prefer-template */
-        '<h2 class="message">Here\'s a link to your question</h2>' +
-          '<form>' +
-          '<div id="question-url" class="input-group">' +
-          '<input type="text" id="copy-input" class="form-control input-lg" value="' + questionURL + '" placeholder="Question URL">' +
-          '<span class="input-group-btn">' +
-          '<button class="btn btn-lg" type="button" id="copy-button" data-placement="button" title="Copy to Clipboard">' +
-          'Copy Link' +
-          '</button>' +
-          '</span>' +
-          '</div>' +
-          '<button class="btn btn-lg" type="button" id="view-result" data-placement="button" data-question-id="' + res.id + '" title="View Results">' +
-          'View Results' +
-          '</button>' +
-          '</form>'
-      );
-    }).fail((error) => console.error(`ERROR:\n ${error}`));
+      window.location = `${window.location.origin}/admin/${res.admin_key}`;
+    }).fail((error) => logError(error));
   };
 
 
@@ -76,11 +66,28 @@ $(document).ready(() => {
 
 
   /**
+   * Delete a question
+   **/
+  function deleteQuestion(qID) {
+    $.ajax({
+      type: 'DELETE',
+      contentType: 'application/json',
+      dataType: 'json',
+      url: '/api/question',
+      headers: { 'X-HTTP-Method-Override': 'DELETE' },
+      data: JSON.stringify({ qid: qID }),
+    }).done(() => {
+      window.location = `${window.location.origin}/`;
+    }).fail((error) => logError(error));
+  };
+
+
+  /**
    * Get information about a question (or a list of questions)
    */
   function getQuestionData(qID, random, successFunction) {
     // Add a space to an empty random array in order to allow it to be passed via ajax (lol jQuery)
-    if (typeof random !== 'undefined' && random.length === 0) { random.push(''); }
+    if (typeof random !== 'undefined' && random.length === 0) { random.push(''); };
 
     const questionInfo = {
       qid: qID,
@@ -90,12 +97,12 @@ $(document).ready(() => {
       type: 'GET',
       contentType: 'application/json',
       dataType: 'json',
-      url: '/question',
+      url: '/api/question',
       headers: { 'X-HTTP-Method-Override': 'GET' },
       data: questionInfo,
     })
-    .done((res, status) => successFunction(res, status))
-    .fail((error) => console.error(`ERROR: \n ${error}`));
+      .done((res, status) => successFunction(res, status))
+      .fail((error) => logError(error));
   };
 
 
@@ -131,7 +138,7 @@ $(document).ready(() => {
    * Render a single question's result
    **/
   function renderQuestionResult(questionData) {
-    function questionHTML(id, question) { return '<div class="question"><h2 data-id="' + id + '">' + id + '. ' + question + '</h2></div>'; };
+    function questionHTML(id, question) { return '<div class="question"><h2 data-id="' + id + '">' + question + '</h2></div>'; };
 
     function calculateAnswerPercent(totalResponses, answerResponseCount) {
       const width = (answerResponseCount / totalResponses) * 100;
@@ -152,7 +159,7 @@ $(document).ready(() => {
     return '<div class="question-container">' +
       questionHTML(questionData.id, questionData.question) +
       answerHTML(questionData.answers, questionData) +
-    '</div>';
+      '</div>';
   };
 
 
@@ -190,10 +197,10 @@ $(document).ready(() => {
    */
   function submitAnswer(answerData) {
     $.ajax({
-      type: 'POST',
+      type: 'PUT',
       contentType: 'application/json',
       dataType: 'json',
-      url: '/question',
+      url: '/api/question',
       data: JSON.stringify(answerData),
     }).done(() => {
       const seenQuestions = getQuestionCookie();
@@ -201,14 +208,14 @@ $(document).ready(() => {
       Cookies.set('seen-questions', JSON.stringify(seenQuestions), { expires: 1 });
       const page = $(location).attr('pathname');
       switch (page) {
-        case '/question/random':
+        case '/answer/random':
           getQuestionData(undefined, seenQuestions, (res) => renderQuestion(res[0]));
           break;
         default:
           window.location = `${window.location.origin}/results/${answerData.qid}`;
           break;
       }
-    }).fail((error) => console.log(`ERROR: \n ${error}`));
+    }).fail((error) => logError(error));
   };
 
 
@@ -248,7 +255,7 @@ $(document).ready(() => {
   /** UI ACTIONS **/
 
   /** Add answer **/
-  $('.add-answer').on('click', () => {
+  $('#add-answer').on('click', () => {
     addAnswer($('.answers'));
   });
 
@@ -296,6 +303,12 @@ $(document).ready(() => {
     window.open(`${window.location.origin}/results/${qID}`, '_blank');
   });
 
+
+  /** Delete question **/
+  $(document).on('click', '#delete-question', function () {
+    const qID = $(this).data('question-id');
+    if (confirm('Really delete this question?')) { deleteQuestion(qID); };
+  });
 
   /** END UI ACTIONS **/
 });

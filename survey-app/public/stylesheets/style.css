@@ -116,23 +116,24 @@ textarea:focus, input:focus {
     box-align: center; }
     .container-fluid .content h2 {
       margin: auto; }
-  .container-fluid .create-question, .container-fluid .question-results {
+  .container-fluid .administer-question, .container-fluid .create-question, .container-fluid .question-results {
     width: 100%; }
-    .container-fluid .create-question .message, .container-fluid .question-results .message {
+    .container-fluid .administer-question .message, .container-fluid .create-question .message, .container-fluid .question-results .message {
       margin: 0 auto;
       margin-bottom: 5rem; }
-    .container-fluid .create-question .form-group, .container-fluid .question-results .form-group {
+    .container-fluid .administer-question .form-group, .container-fluid .create-question .form-group, .container-fluid .question-results .form-group {
       width: inherit; }
-    .container-fluid .create-question #question-url input, .container-fluid .question-results #question-url input {
+    .container-fluid .administer-question #question-url input, .container-fluid .create-question #question-url input, .container-fluid .question-results #question-url input {
       background: #153a51;
       border: none;
       color: #5BC3EB; }
-    .container-fluid .create-question #question-url #copy-button, .container-fluid .create-question #question-url .input-group-btn, .container-fluid .question-results #question-url #copy-button, .container-fluid .question-results #question-url .input-group-btn {
+    .container-fluid .administer-question #question-url #copy-button, .container-fluid .administer-question #question-url .input-group-btn, .container-fluid .create-question #question-url #copy-button, .container-fluid .create-question #question-url .input-group-btn, .container-fluid .question-results #question-url #copy-button, .container-fluid .question-results #question-url .input-group-btn {
       background: #5BC3EB;
       border: none;
       color: #153a51;
-      font-weight: 300; }
-    .container-fluid .create-question #view-result, .container-fluid .question-results #view-result {
+      font-weight: 300;
+      margin: 0; }
+    .container-fluid .administer-question .btn, .container-fluid .create-question .btn, .container-fluid .question-results .btn {
       margin-top: 5rem;
       width: 100%; }
   .container-fluid .question {
@@ -165,12 +166,12 @@ textarea:focus, input:focus {
   .container-fluid .question-results.list .question-container {
     margin-bottom: 5vh;
     padding: 2.5vh; }
+  .container-fluid .question-results.list h2 {
+    font-size: 1.5em; }
   .container-fluid .question-results .question-container {
     width: 100%; }
     .container-fluid .question-results .question-container .question {
       margin-bottom: 4vh; }
-      .container-fluid .question-results .question-container .question h2 {
-        font-size: 1.5em; }
     .container-fluid .question-results .question-container .answer {
       background: #153a51;
       padding: 0;
@@ -210,13 +211,17 @@ textarea:focus, input:focus {
         position: relative; }
   .container-fluid .form-group {
     margin: 0; }
-    .container-fluid .form-group .question-field, .container-fluid .form-group .answer-field, .container-fluid .form-group .add-answer {
+    .container-fluid .form-group .question-field {
+      margin-bottom: 5vh; }
+    .container-fluid .form-group .answer-field, .container-fluid .form-group .add-answer {
       margin-bottom: 3vh; }
+    .container-fluid .form-group .answer-field:last-child {
+      margin-bottom: 0; }
 
-.add-answer, #view-result {
+.form-btn {
   background-color: #1E5171;
   font-weight: 300; }
-  .add-answer:hover, #view-result:hover {
+  .form-btn:hover, .form-btn:focus {
     color: #5BC3EB; }
 
 .bottom-button-fill {
