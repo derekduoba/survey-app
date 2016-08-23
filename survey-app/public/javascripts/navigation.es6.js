@@ -208,7 +208,7 @@ $(document).ready(() => {
       Cookies.set('seen-questions', JSON.stringify(seenQuestions), { expires: 1 });
       const page = $(location).attr('pathname');
       switch (page) {
-        case '/answer/random':
+        case '/question/random':
           getQuestionData(undefined, seenQuestions, (res) => renderQuestion(res[0]));
           break;
         default:
