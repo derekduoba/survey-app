@@ -40,19 +40,23 @@ module.exports = (app, dbController) => {
 
 
   /**
-   * Get a specific question by it's world-readable ID
-   **/
-  app.get('/question/:qID', (req, res) => {
-    res.render('answer-question', { qID: req.params.qID });
-  });
-
-
-  /**
    * Get a random question
    **/
   app.get('/question/random', (req, res) =>
      res.render('answer-question', { qID: req.params.qID })
   );
+
+
+  /**
+   * Get a specific question by it's world-readable ID
+   **/
+  app.get('/question/:qID', (req, res) => {
+    if (isNaN(parseInt(req.params.qID, 10))) {
+      res.render('404');
+    } else {
+      res.render('answer-question', { qID: req.params.qID });
+    }
+  });
 
 
   /**

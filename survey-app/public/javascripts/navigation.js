@@ -212,7 +212,7 @@ $(document).ready(function () {
       Cookies.set('seen-questions', JSON.stringify(seenQuestions), { expires: 1 });
       var page = $(location).attr('pathname');
       switch (page) {
-        case '/answer/random':
+        case '/question/random':
           getQuestionData(undefined, seenQuestions, function (res) {
             return renderQuestion(res[0]);
           });
