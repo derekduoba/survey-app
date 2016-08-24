@@ -35,24 +35,19 @@ module.exports = (function () {
      *  @param {Number} admin_key - The user administration key; Will be blank on failure
      */
     createQuestion(questionData, callback) {
-      sequelize.Promise.resolve({}).then(() => {
-        db.questions.create({ question: questionData.question }).then((question) => {
-          this.question = question;
-        }).then(() => {
-          this.answers = sequelize.Promise.map(questionData.answers, (a) => {
-            db.answers.create({ answer: a }).then((answer) => this.question.addAnswer(answer));
-          });
+      db.questions.create({ question: questionData.question })
+      .then((question) => sequelize.Promise.map(questionData.answers, (a) =>
+        db.answers.create({ answer: a }).then((answer) => question.addAnswer(answer))
+      ))
+      .then((question) =>
+        callback({
+          id: question[0].dataValues.id,
+          admin_key: new Hashids('survey time', 10).encode(question[0].dataValues.id),
         })
-        .then(() => {
-          callback({
-            id: this.question.id,
-            admin_key: new Hashids('survey time', 10).encode(this.question.id),
-          });
-        }).
-        catch((error) => {
-          logError(error);
-          callback({});
-        });
+      )
+      .catch((error) => {
+        logError(error);
+        callback({});
       });
     },
 
@@ -70,7 +65,7 @@ module.exports = (function () {
      * 3.) Get a specific question by specifying an ID (e.g. 123) in the request.id property
      *
      * @param {Object} request - JSON containing question lookup information
-     *  @param {Number} [id] - A question ID (e.g. 123); will return all questions if an
+     *  @param {Number} [qid] - A question ID (e.g. 123); will return all questions if an
      *    id is not provided and 'random' is not set
      *  @param {Array.<Number>} [random] - Will retreive a random question that
      *    hasn't already been seen. The input array should contain a list of previously
@@ -155,17 +150,15 @@ module.exports = (function () {
         },
       }).then((record) => {
         if (record) {
-          record.increment('responses').then(() => {
+          record.increment('responses').then(() =>
             db.questions.find({
               where: {
                 id: questionID,
               },
-            }).then((record) => {
-              record.increment('total_responses').then(() => {
-                callback(true);
-              });
-            });
-          });
+            }).then((record) =>
+              record.increment('total_responses').then(() => callback(true))
+            )
+          );
         } else {
           logError(`No matching answer for qID= ${questionID}  aID=${answerID}`);
           callback(false);

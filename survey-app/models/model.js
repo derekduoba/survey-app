@@ -77,6 +77,7 @@ module.exports = function (sequelize) {
 
 
   // NOTE: Use the following to drop any preexisting tables (DANGEROUS)
+  // sequelize.sync({ force: true  })
   retryFunctionWithTimeout(() =>
     sequelize.sync().then(() => console.log('Database model initialized')),
     1e3,
